@@ -1,0 +1,27 @@
+﻿@page "/convert"
+<PageTitle>Contert</PageTitle>
+<h3>Konventering</h3>
+<p>Konventera från meter till fot</p>
+<label for="meter">Meter:</label>
+<input type="number" @bind="meter" />
+<button @onclick="ConvertToF">Konventera</button>
+<p>Resultat: @result ft</p>
+
+
+@code {
+    //konventera till feet och sedan avrunda.
+    private double meter;
+
+    private double feet;
+
+    private double result;
+
+    private void ConvertToF()
+    {
+
+        feet = meter * 3.2808;
+        // en decimal
+        result = Math.Round(feet, 1);
+
+    }
+}

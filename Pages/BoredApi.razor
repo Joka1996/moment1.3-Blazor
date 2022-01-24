@@ -1,0 +1,43 @@
+﻿@page "/BoredApi"
+@inject HttpClient Http
+
+
+<PageTitle>JSON</PageTitle>
+<h3>Json</h3>
+@if(request == null)
+{
+    <p>Laddar aktiviteter...</p>
+} else
+{
+    <p>En aktivitet att utföra om du är uttråkad:</p>
+    <ul>
+        @foreach( var act in request)
+        {
+        <li>Aktivietet: @act.activity </li> 
+        <li>typ av aktivitet: @act.type</li>
+        <li>Antal deltagare: @act.participants</li>
+        }
+
+    </ul>
+}
+
+
+@code {
+
+    private Bored[]? request;
+
+    protected override async Task OnInitializedAsync()
+    {
+       request = await Http.GetFromJsonAsync<Bored[]>("https://www.boredapi.com/api/activity/");
+    }
+
+    public class Bored
+    {
+
+        public string? activity { get; set; }
+
+        public string? type { get; set; }
+
+        public int? participants { get; set; }
+    }
+}
