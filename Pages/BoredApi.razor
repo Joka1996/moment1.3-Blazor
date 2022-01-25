@@ -1,43 +1,62 @@
 ﻿@page "/BoredApi"
 @inject HttpClient Http
+@using System.Text.Json
+@using System.Text.Json.Serialization;
 
 
 <PageTitle>JSON</PageTitle>
-<h3>Json</h3>
-@if(request == null)
+<h3>Kattfakta</h3>
+@if(catRequest == null)
+{
+    <p>Laddar kattfakta...</p>
+} else
+{
+    <p></p>
+    <ul>
+        @foreach( var act in catRequest)
+        {
+        <li>Kattfakta: @act.text </li> 
+        }
+    </ul>
+}
+<hr>    
+<h3>Aktivitet</h3>
+@if(boredRequest is null)
 {
     <p>Laddar aktiviteter...</p>
 } else
 {
-    <p>En aktivitet att utföra om du är uttråkad:</p>
     <ul>
-        @foreach( var act in request)
-        {
-        <li>Aktivietet: @act.activity </li> 
-        <li>typ av aktivitet: @act.type</li>
-        <li>Antal deltagare: @act.participants</li>
-        }
-
+    <li>Aktivitet: @boredRequest.activity</li>
+    <li>Typ av aktivitet: @boredRequest.type</li>
+    <li>Antal deltagare: @boredRequest.participants</li>
     </ul>
 }
 
 
 @code {
-
-    private Bored[]? request;
+    //gjrot två anrop, en för att testa i array och en som inte är array
+    private List<Cats>? catRequest;
+    private Bored? boredRequest; 
 
     protected override async Task OnInitializedAsync()
     {
-       request = await Http.GetFromJsonAsync<Bored[]>("https://www.boredapi.com/api/activity/");
+        catRequest = await Http.GetFromJsonAsync<List<Cats>>("https://cat-fact.herokuapp.com/facts/");
+
+        boredRequest = await Http.GetFromJsonAsync<Bored>("https://www.boredapi.com/api/activity/");
+    }
+
+    public class Cats
+    {
+        public string? text { get; set; }
+
     }
 
     public class Bored
     {
-
         public string? activity { get; set; }
-
         public string? type { get; set; }
-
         public int? participants { get; set; }
+
     }
 }
